@@ -6,7 +6,6 @@ import (
 	"log"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
-	"strconv"
 	"crypto/md5"
 	"fmt"
 	"math/rand"
@@ -98,10 +97,17 @@ func (tree *Tree) Update() error{
 	return nil
 }
 
-func Gen_Hash(identity string, name string)(string){
+func GenHash( salt string, args ...string)(string){
 	rand.Seed(time.Now().UnixNano())
-	x := strconv.Itoa(rand.Intn(10000))
-	s := md5.Sum([]byte(identity+name+x))
-	res := fmt.Sprintf("%x",s)
+
+	var res string
+
+	for _, arg := range args {
+		res = res+arg
+	}
+	res =salt+res
+	s := md5.Sum([]byte(res))
+	res = fmt.Sprintf("%x",s)
 	return res
 }
+

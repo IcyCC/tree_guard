@@ -17,7 +17,7 @@ type HashResult struct {
 	Hash string `json:"hash"`
 }
 
-type Result struct {
+type TreeResult struct {
 	Status string `json:"status"`
 	Data []*model.Tree `json:"data"`
 	Reason string `json:"reason"`
@@ -28,7 +28,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request){
 }
 
 func TreeHandler(w http.ResponseWriter, r *http.Request){
-	resp := Result{Status:"Fail", Data:[]*model.Tree{}}
+	resp := TreeResult{Status:"Fail", Data:[]*model.Tree{}}
 	if r.Method == "GET"{
 		var tree *model.Tree
 		var err error
@@ -42,6 +42,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 				b,_ := json.Marshal(resp)
 				log.Println(err)
 				fmt.Fprint(w,string(b))
+				return
 			}
 			tree,err = model.FindTreeById(id)
 			if err != nil{
@@ -50,6 +51,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 				b,_ := json.Marshal(resp)
 				log.Println(err)
 				fmt.Fprint(w,string(b))
+				return
 			}
 		}
 
@@ -61,6 +63,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 				b,_ := json.Marshal(resp)
 				log.Println(err)
 				fmt.Fprint(w,string(b))
+				return
 			}
 
 		}
@@ -70,6 +73,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 			resp.Reason="illegal query string"
 			b,_ := json.Marshal(resp)
 			fmt.Fprint(w,string(b))
+			return
 		}
 
 		resp.Data = append(resp.Data,tree)
@@ -77,6 +81,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 		resp.Status="Success"
 		b,_ := json.Marshal(resp)
 		fmt.Fprint(w,string(b))
+		return
 	}
 	if r.Method == "POST"{
 		name := r.FormValue("name")
@@ -88,10 +93,12 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 			resp.Status = "Fail"
 			b,_ := json.Marshal(resp)
 			fmt.Fprint(w,string(b))
+			return
 		}
 		resp.Status = "Success"
 		b,_ := json.Marshal(resp)
 		fmt.Fprint(w,string(b))
+		return
 	}
 	if r.Method == "PUT"{
 		r.ParseForm()
@@ -105,6 +112,7 @@ func TreeHandler(w http.ResponseWriter, r *http.Request){
 		resp.Status = "Success"
 		b,_ := json.Marshal(resp)
 		fmt.Fprint(w,string(b))
+		return
 
 	}
 }
@@ -113,10 +121,11 @@ func GenHashHandler(w http.ResponseWriter, r *http.Request){
 	var result HashResult
 	identity:=r.FormValue("identity")
 	name:=r.FormValue("name")
-	hash := model.Gen_Hash(identity,name)
+	hash := model.GenHash(identity,name)
 	result.Status = "Success"
 	result.Reason = ""
 	result.Hash = hash
 	b,_ := json.Marshal(result)
 	fmt.Fprint(w,string(b))
+	return
 }
