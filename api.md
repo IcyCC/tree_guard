@@ -122,7 +122,7 @@
   
 * result:
   - status string "Success"表示成功 "Fail"表示失败
-  - Reason string 表示失败原因 成功空字串
+  - Reason str  ing 表示失败原因 成功空字串
   - data [User]list  一个User对象的list
     
   ```json

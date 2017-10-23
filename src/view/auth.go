@@ -15,6 +15,8 @@ var(
 	LoginManager = go_login.NewLoginManager(LoginConfig)
 )
 
+
+
 type UserResult struct {
 	Status string `json:"status"`
 	Data []*model.User `json:"data"`

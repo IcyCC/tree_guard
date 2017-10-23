@@ -9,6 +9,7 @@ _ "github.com/go-sql-driver/mysql"
 )
 
 func main(){
+
 	http.HandleFunc("/", view.IndexHandler)
 	http.HandleFunc("/tree", view.TreeHandler)
 	http.HandleFunc("/gen_token", view.GenHashHandler)
